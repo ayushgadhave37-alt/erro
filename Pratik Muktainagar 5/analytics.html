@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERRO - Analytics Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        .chart-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: var(--glass-blur);
+        }
+        .chart-card h3 {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .big-score {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            font-family: var(--font-mono);
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="branding">
+            <span class="logo-icon">🚑</span> ERRO Analytics
+        </div>
+        <div class="status-indicator">
+            <a href="index.html" class="action-btn outline" style="padding: 0.5rem 1rem; text-decoration: none; margin-bottom: 0;">← BACK TO COMMAND CENTER</a>
+        </div>
+    </header>
+
+    <div class="analytics-grid">
+        <!-- Chart 1 -->
+        <div class="chart-card">
+            <h3>Response Time Trend</h3>
+            <div class="chart-container">
+                <canvas id="chart-response-time"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 2 -->
+        <div class="chart-card">
+            <h3>Incidents by Severity</h3>
+            <div class="chart-container">
+                <canvas id="chart-severity"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 3 -->
+        <div class="chart-card">
+            <h3>Ambulance Utilization</h3>
+            <div class="chart-container">
+                <canvas id="chart-utilization"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 4 -->
+        <div class="chart-card">
+            <h3>Emergency Response Efficiency</h3>
+            <div class="chart-container">
+                <div class="big-score">92.7%</div>
+                <div style="position: absolute; bottom: 20px; color: var(--text-muted);">Target: > 90.0%</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/analytics.js"></script>
+</body>
+</html>

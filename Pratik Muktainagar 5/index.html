@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ERRO — Emergency Response Route Optimizer for Jalgaon, Maharashtra. Real-time accident detection, ambulance dispatch and Dijkstra-based route optimization.">
+    <title>ERRO — Emergency Response Route Optimizer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ═══════════════════ LANDING SCREEN ═══════════════════ -->
+    <div id="landing-screen" class="screen">
+        <canvas id="landing-canvas"></canvas>
+        <div class="landing-content">
+            <div class="logo-badge">
+                <svg viewBox="0 0 120 120" width="90" height="90" aria-hidden="true">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#ef4444" stroke-width="3" opacity="0.6"/>
+                    <circle cx="60" cy="60" r="46" fill="none" stroke="#ef4444" stroke-width="2" opacity="0.3"/>
+                    <rect x="42" y="30" width="36" height="24" rx="4" fill="none" stroke="#f8fafc" stroke-width="2.5"/>
+                    <rect x="46" y="54" width="28" height="16" rx="2" fill="none" stroke="#f8fafc" stroke-width="2"/>
+                    <circle cx="50" cy="74" r="4" fill="none" stroke="#f8fafc" stroke-width="2"/>
+                    <circle cx="70" cy="74" r="4" fill="none" stroke="#f8fafc" stroke-width="2"/>
+                    <line x1="53" y1="38" x2="67" y2="38" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="60" y1="34" x2="60" y2="48" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="84" cy="36" r="8" fill="#ef4444" opacity="0.8"/>
+                    <line x1="84" y1="32" x2="84" y2="40" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="84" cy="30" r="1" fill="#fff"/>
+                </svg>
+            </div>
+            <h1>ERRO</h1>
+            <h2>Emergency Response Route Optimizer</h2>
+            <p class="landing-subtitle">Intelligent routing for faster emergency response</p>
+            <p class="landing-location">📍 Jalgaon, Maharashtra</p>
+            <button id="enter-btn" class="primary-btn" aria-label="Enter the command center dashboard">ENTER COMMAND CENTER</button>
+            <p class="landing-tag">Hackathon Prototype &bull; TS-1: Highway Emergency Response</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ DASHBOARD SCREEN ═══════════════════ -->
+    <div id="dashboard-screen" class="screen hidden">
+
+        <!-- Top Bar -->
+        <header class="top-bar" role="banner">
+            <div class="branding"><span class="logo-icon" aria-hidden="true">🚑</span> ERRO</div>
+            <div class="location-info">Jalgaon, Maharashtra &mdash; NH-6 Corridor</div>
+            <div class="status-indicator" aria-label="System status: online"><span class="dot pulse-green"></span> SYSTEM ONLINE</div>
+            <div class="clock" id="system-clock" aria-live="polite">00:00:00</div>
+        </header>
+
+        <!-- Main 3-column layout -->
+        <div class="main-layout">
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="sidebar" role="navigation" aria-label="Main navigation">
+                <nav>
+                    <ul>
+                        <li class="nav-item active" data-view="dashboard" tabindex="0" role="button">📊 Dashboard</li>
+                        <li class="nav-item" data-view="incidents" tabindex="0" role="button">🚨 Incidents</li>
+                        <li class="nav-item" data-view="ambulances" tabindex="0" role="button">🚑 Ambulances</li>
+                        <li class="nav-item" data-view="hospitals" tabindex="0" role="button">🏥 Hospitals</li>
+                        <li class="nav-item" data-view="analytics" tabindex="0" role="button">📈 Analytics</li>
+                    </ul>
+                </nav>
+
+                <div class="action-panel">
+                    <button id="simulate-btn" class="danger-btn" aria-label="Simulate a random highway accident">🚨 SIMULATE ACCIDENT</button>
+                    <div class="divider"></div>
+                    <button id="demo-btn" class="action-btn" aria-label="Start automated live demonstration">▶ START LIVE DEMO</button>
+                    <button id="reset-btn" class="action-btn" aria-label="Reset simulation to initial state">↺ RESET SIMULATION</button>
+                    <button id="command-btn" class="action-btn outline" aria-label="Toggle projector-optimized command center view">🎬 COMMAND CENTER</button>
+                </div>
+
+                <div class="traffic-controls">
+                    <h3>Traffic Simulation</h3>
+                    <div class="btn-group">
+                        <button class="traffic-btn active" data-level="low" aria-label="Set traffic to low">LOW</button>
+                        <button class="traffic-btn" data-level="normal" aria-label="Set traffic to normal">NORM</button>
+                        <button class="traffic-btn" data-level="high" aria-label="Set traffic to high">HIGH</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CENTER: MAP + OVERLAY VIEWS -->
+            <main class="center-area">
+                <!-- The Canvas Map (always rendered, may be overlaid) -->
+                <div class="map-container" id="map-wrapper">
+                    <canvas id="city-map" aria-label="Interactive Jalgaon city highway map"></canvas>
+                    <div id="toast-container" aria-live="polite"></div>
+                    <div class="map-legend" id="map-legend">
+                        <span><i class="legend-dot" style="background:#475569"></i> Junction</span>
+                        <span><i class="legend-dot" style="background:#ef4444"></i> Hospital</span>
+                        <span><i class="legend-dot" style="background:#10b981"></i> Ambulance</span>
+                        <span><i class="legend-line highway"></i> NH-6 Highway</span>
+                        <span><i class="legend-line main-road"></i> Main Road</span>
+                    </div>
+                </div>
+
+                <!-- Overlay views for sidebar pages -->
+                <div class="overlay-view hidden" id="view-incidents">
+                    <h2>🚨 Incident Log</h2>
+                    <p class="view-subtitle">All possible incident scenarios in the Jalgaon network</p>
+                    <div class="card-grid" id="incidents-grid"></div>
+                </div>
+
+                <div class="overlay-view hidden" id="view-ambulances">
+                    <h2>🚑 Ambulance Fleet</h2>
+                    <p class="view-subtitle">Real-time status of all emergency response units</p>
+                    <div class="card-grid" id="ambulances-grid"></div>
+                </div>
+
+                <div class="overlay-view hidden" id="view-hospitals">
+                    <h2>🏥 Hospital Network</h2>
+                    <p class="view-subtitle">Emergency-capable hospitals across Jalgaon</p>
+                    <div class="card-grid" id="hospitals-grid"></div>
+                </div>
+
+                <div class="overlay-view hidden" id="view-analytics">
+                    <h2>📈 Analytics Dashboard</h2>
+                    <p class="view-subtitle">System performance & emergency response metrics</p>
+                    <div class="analytics-grid">
+                        <div class="chart-card">
+                            <h3>Response Time Trend (Last 7 Days)</h3>
+                            <div class="chart-area"><canvas id="chart-response"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Incidents by Severity</h3>
+                            <div class="chart-area"><canvas id="chart-severity"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Ambulance Utilization (%)</h3>
+                            <div class="chart-area"><canvas id="chart-utilization"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Emergency Response Efficiency</h3>
+                            <div class="chart-area efficiency-score">
+                                <div class="big-score" id="efficiency-score">92.7%</div>
+                                <div class="score-label">Target: &gt; 90.0%</div>
+                                <div class="score-bar"><div class="score-fill" style="width:92.7%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- RIGHT INFO PANEL -->
+            <aside class="info-panel" role="complementary" aria-label="Incident and response details">
+                <div class="panel-section" id="incident-panel">
+                    <h3>INCIDENT INFO</h3>
+                    <div class="content placeholder">No active incidents.</div>
+                </div>
+                <div class="panel-section" id="route-panel">
+                    <h3>ROUTE ANALYSIS</h3>
+                    <div class="content placeholder">Awaiting route calculation...</div>
+                </div>
+                <div class="panel-section" id="response-panel">
+                    <h3>RESPONSE UNIT</h3>
+                    <div class="content placeholder">Awaiting dispatch...</div>
+                </div>
+                <div class="panel-section" id="hospital-panel">
+                    <h3>DESTINATION HOSPITAL</h3>
+                    <div class="content placeholder">Awaiting triage...</div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Bottom KPI Bar -->
+        <footer class="bottom-kpi" role="contentinfo">
+            <div class="kpi-card"><div class="kpi-title">Active Incidents</div><div class="kpi-value" id="kpi-incidents">0</div></div>
+            <div class="kpi-card"><div class="kpi-title">Ambulances Available</div><div class="kpi-value" id="kpi-ambulances">8</div></div>
+            <div class="kpi-card"><div class="kpi-title">Avg Response ETA</div><div class="kpi-value" id="kpi-eta">06:42</div></div>
+            <div class="kpi-card"><div class="kpi-title">Hospitals Online</div><div class="kpi-value" id="kpi-hospitals">8</div></div>
+            <div class="kpi-card"><div class="kpi-title">Lives Assisted</div><div class="kpi-value" id="kpi-lives">127</div></div>
+            <div class="kpi-card"><div class="kpi-title">System Status</div><div class="kpi-value kpi-status"><span class="dot pulse-green"></span> OPERATIONAL</div></div>
+        </footer>
+    </div>
+
+    <!-- ═══════════════════ SCRIPTS (order matters) ═══════════════════ -->
+    <script src="data/mock-data.js"></script>
+    <script src="js/wasm-loader.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/ambulance.js"></script>
+    <script src="js/hospital.js"></script>
+    <script src="js/traffic.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

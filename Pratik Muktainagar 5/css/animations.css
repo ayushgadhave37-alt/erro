@@ -1,0 +1,70 @@
+/* ═══════════ ANIMATIONS ═══════════ */
+
+@keyframes pulse-red {
+    0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulse-green {
+    0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.pulse-green {
+    animation: pulse-green 2s infinite;
+}
+
+@keyframes slide-in {
+    from { transform: translateX(100px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Subtle entrance for overlay views */
+.overlay-view:not(.hidden) {
+    animation: fade-in 0.3s ease forwards;
+}
+
+/* Info card entrance stagger */
+.info-card {
+    animation: fade-in 0.4s ease forwards;
+}
+.info-card:nth-child(2) { animation-delay: 0.05s; }
+.info-card:nth-child(3) { animation-delay: 0.10s; }
+.info-card:nth-child(4) { animation-delay: 0.15s; }
+.info-card:nth-child(5) { animation-delay: 0.20s; }
+.info-card:nth-child(6) { animation-delay: 0.25s; }
+.info-card:nth-child(7) { animation-delay: 0.30s; }
+.info-card:nth-child(8) { animation-delay: 0.35s; }
+
+/* Siren flash effect for KPI during active incident */
+@keyframes siren-flash {
+    0%, 100% { color: var(--accent-red); }
+    50%      { color: var(--accent-blue); }
+}
+
+/* Smooth glow for active panel sections */
+.panel-section h3 {
+    transition: color 0.3s ease;
+}
+
+/* Landing screen logo pulse */
+.logo-badge svg {
+    animation: logo-breathe 3s ease-in-out infinite;
+}
+
+@keyframes logo-breathe {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+    50%      { transform: scale(1.05); filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.3)); }
+}
